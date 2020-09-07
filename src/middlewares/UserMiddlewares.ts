@@ -24,6 +24,13 @@ class UserMiddlewares {
         }),
     });
 
+    validateBodyToLogin = celebrate({
+        body: Joi.object().keys({
+            email: Joi.string().email().required(),
+            password: Joi.string().required(),
+        })
+    });
+
     async validateUniqueEmail(request: Request, response: Response, next: NextFunction) {
         const { email } = request.body;
 
