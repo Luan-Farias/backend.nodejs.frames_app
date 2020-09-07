@@ -56,48 +56,22 @@ class UserController {
 
             return response.json({ user: user });
         } catch (error) {
-            return response.json(error);
+            return response.json({ error: 'Ocorreu um erro na conexão com o banco de dados, por favor tente novamente'});
         }
     }
 
     async update(request: Request, response: Response) {
-        const { authorization } = request.headers;
         const { id } = request.params;
         const { name, email, password, whatsapp, avatar, bio } = request.body;
 
-        if (!authorization) {
-            return response.status(401).json({
-                error: 'Not send the authorization token'
-            });
-        }
-
-        const payload= jwt.verify(authorization, process.env.APP_KEY);
-
-        const user = await db('users').where('token', Object(payload).token).first();
-        if(!user) {
-            return response.status(404).json({
-                error: 'Token not valid!',
-            });
-        }
-
-        if (user.id != id) {
-            return response.status(401).json({
-                error: 'You\'re not authorizated to make this process'
-            });
-        }
-
-        if (!name || !email) {
-            return response.status(400).json({
-                error: 'You have to send all params',
-            });
-        }
-
-        user.name = name;
-        user.email = email;
-        user.password = password ? await bcrypt.hash(password, 8) : user.password;
-        user.whatsapp = whatsapp ?? user.wathsapp;
-        user.avatar = avatar ?? user.avatar;
-        user.bio = bio ?? user.wathsapp;
+        const user = {
+            name,
+            email,
+            password,
+            whatsapp,
+            avatar,
+            bio
+        };
 
         await db('users').update(user).where('id', id);
 
@@ -106,28 +80,6 @@ class UserController {
 
     async destroy(request: Request, response: Response) {
         const { id } = request.params;
-        const { authorization } = request.headers;
-
-        if (!authorization) {
-            return response.status(401).json({
-                error: 'Not send the authorization token'
-            });
-        }
-
-        const payload= jwt.verify(authorization, process.env.APP_KEY);
-
-        const user = await db('users').where('token', Object(payload).token).first();
-        if(!user) {
-            return response.status(404).json({
-                error: 'Token not valid!',
-            });
-        }
-
-        if (user.id != id) {
-            return response.status(401).json({
-                error: 'You\'re not authorizated to make this process'
-            });
-        }
 
         await db('users').delete().where('id', id);
         return response.send();

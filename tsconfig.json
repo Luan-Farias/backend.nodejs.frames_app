@@ -21,7 +21,9 @@
         "baseUrl": ".",
         "paths": {
             "@controllers/*": ["./src/controllers/*"],
-            "@database/*": ["./src/database/*"]
+            "@database/*": ["./src/database/*"],
+            "@middlewares/*": ["./src/middlewares/*"],
+            "@config/*": ["./src/config/*"]
         }
     },
     "include": [
