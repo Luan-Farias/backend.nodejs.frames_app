@@ -20,7 +20,8 @@
         "forceConsistentCasingInFileNames": true,
         "baseUrl": ".",
         "paths": {
-            "@controllers/*": ["./src/controllers/*"]
+            "@controllers/*": ["./src/controllers/*"],
+            "@database/*": ["./src/database/*"]
         }
     },
     "include": [

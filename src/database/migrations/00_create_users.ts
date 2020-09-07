@@ -7,7 +7,7 @@ export async function up (knex: Knex) {
         table.string('email').notNullable().unique();
         table.string('password').notNullable();
         table.string('token').notNullable();
-        table.string('wathsapp');
+        table.string('whatsapp');
         table.string('avatar');
         table.string('bio');
     });

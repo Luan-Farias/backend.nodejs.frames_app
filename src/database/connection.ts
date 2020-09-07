@@ -9,3 +9,7 @@ const dbConfig = {
         database: process.env.DB_NAME,
     },
 }
+
+const db = knex(dbConfig);
+
+export default db;
