@@ -86,7 +86,7 @@ class UserMiddlewares {
         request.body.email = email;
         request.body.password = password ? await bcrypt.hash(password, 8) : user.password;
         request.body.whatsapp = whatsapp ?? user.whatsapp;
-        request.body.avatar = request.file.filename ?? user.avatar;
+        request.body.avatar = request.file?.filename ?? user.avatar;
         request.body.bio = bio ?? user.bio;
 
         next();
