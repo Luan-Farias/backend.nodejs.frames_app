@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import db from '@database/connection';
 
 class UserController {
-    async index(request: Request, response: Response) {
+    async index(request: Request, response: Response): Promise<Response> {
         try {
             const users = await db('users').select(['id', 'name', 'email', 'whatsapp', 'avatar', 'bio']);
 
@@ -15,7 +15,7 @@ class UserController {
         }
     }
 
-    async create(request: Request, response: Response) {
+    async create(request: Request, response: Response): Promise<Response> {
         const { name, email, password } = request.body;
 
         const user = {
@@ -39,7 +39,7 @@ class UserController {
         }
     }
 
-    async show(request: Request, response: Response) {
+    async show(request: Request, response: Response): Promise<Response> {
         const { id } = request.params;
         const { authorization } = request.headers;
 
@@ -60,7 +60,7 @@ class UserController {
         }
     }
 
-    async update(request: Request, response: Response) {
+    async update(request: Request, response: Response): Promise<Response> {
         const { id } = request.params;
         const { name, email, password, whatsapp, avatar, bio } = request.body;
 
@@ -78,7 +78,7 @@ class UserController {
         return response.send();
     }
 
-    async destroy(request: Request, response: Response) {
+    async destroy(request: Request, response: Response): Promise<Response> {
         const { id } = request.params;
 
         await db('users').delete().where('id', id);

@@ -40,7 +40,7 @@ class UserMiddlewares {
 
         const { id } = request.params;
 
-        if(!id || user.id != id) {
+        if(!id || user.id !== Number(id)) {
             return response.status(401).json({
                 error: 'This email just has be used, choose another',
             });
@@ -68,7 +68,7 @@ class UserMiddlewares {
             });
         }
 
-        if (user.id != id) {
+        if (user.id !== Number(id)) {
             return response.status(401).json({
                 error: 'You\'re not authorizated to make this process'
             });

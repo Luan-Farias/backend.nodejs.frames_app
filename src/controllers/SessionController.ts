@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import db from '@database/connection';
 
 class SessionController {
-    async store(request: Request, response: Response) {
+    async store(request: Request, response: Response): Promise<Response> {
         const { email, password } = request.body;
 
         const user = await db('users').select().where('email', email).first();
