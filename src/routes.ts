@@ -8,6 +8,8 @@ import multerConfig from '@config/multerConfig';
 import SessionController from '@controllers/SessionController';
 import FramesCategoryController from '@controllers/FramesCategoryController';
 import FrameCategoryMiddlewares from '@middlewares/FrameCategoryMiddlewares';
+import FramesController from '@controllers/FramesController';
+import FrameMiddleware from '@middlewares/FrameMiddleware';
 
 const routes = Router();
 const upload =  multer(multerConfig);
@@ -34,12 +36,14 @@ routes.put(
     UserMiddlewares.validateBodyToUpdate,
     UserMiddlewares.validateUniqueEmail,
     UserMiddlewares.validateToken,
+    UserMiddlewares.validateToUsersRoute,
     UserMiddlewares.replaceInvalidFields,
     UserController.update,
 );
 routes.delete(
     '/users/:id',
     UserMiddlewares.validateToken,
+    UserMiddlewares.validateToUsersRoute,
     UserController.destroy
 );
 
@@ -51,7 +55,7 @@ routes.post(
     FrameCategoryMiddlewares.validateUniqueKeyword,
     FramesCategoryController.create
 );
-// routes.get('/categories/:id', FramesCategoryController.show);
+routes.get('/categories/:id', FramesCategoryController.show);
 routes.put(
     '/categories/:id',
     upload.single('image'),
@@ -62,6 +66,32 @@ routes.put(
 routes.delete(
     '/categories/:id',
     FramesCategoryController.delete,
+);
+
+routes.get('/frames', FramesController.index);
+routes.get('/frames/users/:id', FramesController.filterByUser);
+routes.get('/frames/:id', FramesController.show);
+routes.post(
+    '/frames',
+    upload.single('image'),
+    UserMiddlewares.validateToken,
+    FrameMiddleware.validateCategory,
+    FrameMiddleware.replaceFieldsToCreate,
+    FramesController.create
+);
+routes.put(
+    '/frames/:id',
+    upload.single('image'),
+    UserMiddlewares.validateToken,
+    FrameMiddleware.validateCategory,
+    FrameMiddleware.validateFrameToUpdate,
+    FramesController.update
+);
+routes.delete(
+    '/frames/:id',
+    UserMiddlewares.validateToken,
+    FrameMiddleware.verifyUserToDelete,
+    FramesController.delete,
 );
 
 export default routes;

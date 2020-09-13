@@ -49,32 +49,15 @@ class UserMiddlewares {
         return next();
     }
 
-    async validateToken(request: Request, response: Response, next: NextFunction) {
-        const { authorization } = request.headers;
+    async validateToUsersRoute(request: Request, response: Response, next: NextFunction) {
+        const { user } = request.body;
         const { id } = request.params;
-
-        if (!authorization) {
-            return response.status(401).json({
-                error: 'Not send the authorization token'
-            });
-        }
-
-        const payload= jwt.verify(authorization, process.env.APP_KEY);
-
-        const user = await db('users').where('token', Object(payload).token).first();
-        if(!user) {
-            return response.status(404).json({
-                error: 'Token not valid!',
-            });
-        }
 
         if (user.id !== Number(id)) {
             return response.status(401).json({
                 error: 'You\'re not authorizated to make this process'
             });
         }
-
-        request.body.user = user;
 
         return next();
     }
@@ -90,6 +73,29 @@ class UserMiddlewares {
         request.body.bio = bio ?? user.bio;
 
         next();
+    }
+
+    async validateToken(request: Request, response: Response, next: NextFunction) {
+        const { authorization } = request.headers;
+
+        if (!authorization) {
+            return response.status(401).json({
+                error: 'Not send the authorization token'
+            });
+        }
+
+        const payload= jwt.verify(authorization, process.env.APP_KEY);
+
+        const user = await db('users').where('token', Object(payload).token).first();
+
+        if(!user) {
+            return response.status(404).json({
+                error: 'Token not valid!',
+            });
+        }
+
+        request.body.user = user;
+        return next();
     }
 }
 

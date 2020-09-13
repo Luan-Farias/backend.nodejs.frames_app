@@ -52,7 +52,7 @@ class UserController {
         }
 
         try {
-            const user = await db('users').select(['id', 'name', 'email', 'whatsapp', 'avatar', 'bio']).where('id', id).orWhere('token', Object(payload).token).first();
+            const user = await db('users').select(['id', 'name', 'email', 'whatsapp', 'avatar', 'bio']).where('id', '=', id).orWhere('token', Object(payload).token).first();
 
             return response.json({ user: user });
         } catch (error) {
@@ -73,7 +73,7 @@ class UserController {
             bio
         };
 
-        await db('users').update(user).where('id', id);
+        await db('users').update(user).where('id', '=', id);
 
         return response.send();
     }
@@ -81,7 +81,7 @@ class UserController {
     async destroy(request: Request, response: Response): Promise<Response> {
         const { id } = request.params;
 
-        await db('users').delete().where('id', id);
+        await db('users').delete().where('id', '=', id);
         return response.send();
     }
 }
